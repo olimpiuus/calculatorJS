@@ -29,6 +29,7 @@ function substract(a, b) {
 }
 
 function divide(a, b) {
+    if (b == 0) { return alert('Not allowed deleting to 0') }
     return a / b
 }
 
@@ -40,11 +41,11 @@ function deactiveteDotButton() {
     if (tempNumber.includes(['.'])) {
         dotButon.classList.add('deactiveted')
         dotButon.disabled = true
-        console.log('true');
+
     } else {
         dotButon.classList.remove('deactiveted')
         dotButon.disabled = false
-        console.log('false');
+
     }
 }
 
@@ -73,42 +74,45 @@ function getOperational() {
 
             if (!tempNumber == '' && !numberOne == 0) {
                 numberTwo = parseInt(tempNumber)
-                addToSubMonitor(numberTwo)
+
                 tempNumber = ''
 
                 switch (tempOperant) {
                     case '+':
                         numberOne = add(numberOne, numberTwo)
                         updateMonitor(numberOne)
-                        numberTwo = 0
+                            // numberTwo = 0
                         break;
                     case '-':
                         numberOne = substract(numberOne, numberTwo)
                         updateMonitor(numberOne)
-                        numberTwo = 0
+                            // numberTwo = 0
                         break;
                     case '*':
                         numberOne = multipl(numberOne, numberTwo)
                         updateMonitor(numberOne)
-                        numberTwo = 0
+                            // numberTwo = 0
                         break;
                     case '/':
                         numberOne = divide(numberOne, numberTwo)
                         updateMonitor(numberOne)
-                        numberTwo = 0
+                            // numberTwo = 0
                         break;
 
 
                 }
+                addToSubMonitor(numberTwo)
             }
-            if (!tempNumber == '' && numberOne == 0) {
+
+            tempOperant = o.textContent
+
+
+            if (!tempNumber == '' && numberOne == 0 && tempOperant != '=') {
                 numberOne = parseInt(tempNumber)
                 updateMonitor(numberOne)
                 tempNumber = ''
                 addToSubMonitor(numberOne)
             }
-            tempOperant = o.textContent
-            if (tempOperant !== '=') { addToSubMonitor(tempOperant) }
 
             if (tempOperant === '%') {
                 numberOne = percent(numberOne)
@@ -116,6 +120,11 @@ function getOperational() {
 
             }
 
+            if (tempNumber == '' && numberOne == 0) {
+                return
+            }
+
+            if (tempOperant !== '=') { addToSubMonitor(tempOperant) }
             console.log(numberOne);
             console.log(numberTwo);
             console.log(tempOperant);
@@ -124,6 +133,10 @@ function getOperational() {
 
         })
     })
+}
+
+function keyListener() {
+
 }
 
 function clearCalculator() {
@@ -146,13 +159,12 @@ function clearCalculator() {
     })
 }
 
+function simulateClickBypressKey(e) {
+    if (document.querySelector(`button[data-key="${e.key}"]`)) { document.querySelector(`button[data-key="${e.key}"]`).click(); }
+
+}
+window.addEventListener('keydown', simulateClickBypressKey)
+
 getNumber()
 getOperational()
 clearCalculator()
-
-window.addEventListener('keydown', (e) => {
-    console.log(e.keyCode);
-    document.querySelector(`button[data-key="${e.keyCode}"]`).click();
-
-
-})
