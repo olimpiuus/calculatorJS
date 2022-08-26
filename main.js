@@ -6,6 +6,9 @@ const monitorExpression = document.querySelector('.monitor-sub')
 const dotButon = document.querySelector('.dot')
 console.log(dotButon);
 
+
+
+
 let tempNumber = ''
 let numberOne = 0
 let numberTwo = 0
@@ -146,3 +149,10 @@ function clearCalculator() {
 getNumber()
 getOperational()
 clearCalculator()
+
+window.addEventListener('keydown', (e) => {
+    console.log(e.keyCode);
+    document.querySelector(`button[data-key="${e.keyCode}"]`).click();
+
+
+})
