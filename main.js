@@ -4,8 +4,12 @@ const clearBtn = document.querySelector('.clear-btn')
 const monitor = document.querySelector('.monitor-main')
 const monitorExpression = document.querySelector('.monitor-sub')
 const dotButon = document.querySelector('.dot')
-console.log(dotButon);
+const btnChangeOperant = document.querySelector('#changeOperant')
 
+
+
+let lastOperant = ''
+let lastSecondVariable = ''
 let monitorText = ''
 
 
@@ -45,80 +49,79 @@ function deactiveteDotButton() {
     if (tempNumber.includes(['.'])) {
         dotButon.classList.add('deactiveted')
         dotButon.disabled = true
-
     } else {
         dotButon.classList.remove('deactiveted')
         dotButon.disabled = false
-
     }
 }
 
 function getNumber() {
     numbers.forEach((n) => {
         n.addEventListener('click', () => {
-            tempNumber += n.textContent
-            updateMonitor(tempNumber);
-            clearBtn.textContent = 'C'
-            deactiveteDotButton()
+            tempNumber = tempNumber.toString()
+
+            if (tempNumber.length < 25) {
+                tempNumber += n.textContent
+                updateMonitor(tempNumber);
+                clearBtn.textContent = 'C'
+                deactiveteDotButton()
+            }
         })
     })
 }
 
-
-
 function addToSubMonitor(value) {
-
-    monitorExpression.textContent += value
+    let monitorText = monitorExpression.textContent
+    monitorText += ' '
+    monitorText += value
+    monitorExpression.textContent = monitorText
 
 }
 
 function getNumberTwo(value) {
-
-    // addToSubMonitor(value)
-    let result = parseInt(value)
     tempNumber = ''
     updateMonitor('')
-    return result
+    return parseFloat(value)
 }
 
 function getNumberOne(value) {
-
-
-    addToSubMonitor(value)
-    let result = parseInt(value)
     tempNumber = ''
+    addToSubMonitor(value)
     updateMonitor('')
-    return result
+    return parseFloat(value)
 }
-
-function getOperant(params) {
-
-}
-
 
 function updateMonitor(value) {
-    monitor.textContent = value
+    monitor.textContent = value.toString()
 }
 
 function getOperational() {
     operationals.forEach((operationalBtn) => {
         operationalBtn.addEventListener('click', () => {
 
-            updateMonitor('')
             if (tempNumber != '' && numberOne == undefined) {
                 numberOne = getNumberOne(tempNumber)
-
             }
+
+            if (tempOperant != '' && numberOne != undefined && tempNumber != '') {
+                numberTwo = getNumberTwo(tempNumber)
+            }
+
+            if (numberTwo != undefined && numberOne != undefined) {
+                addToSubMonitor(numberTwo)
+                getFunction(tempOperant)
+                lastSecondVariable = numberTwo
+                numberTwo = undefined
+                lastOperant = tempOperant
+                tempOperant = ''
+            }
+
             if (operationalBtn.textContent != '=') {
                 tempOperant = operationalBtn.textContent
-                numberTwo = undefined
-            }
 
-
-
-
-            if (tempNumber != '' && numberOne != 0) {
-                numberTwo = getNumberTwo(tempNumber)
+            } else {
+                numberTwo = lastSecondVariable
+                tempOperant = lastOperant
             }
 
             if (tempOperant != '=') {
@@ -128,102 +131,81 @@ function getOperational() {
                     monitorExpression.textContent = arr.join('')
                 }
                 addToSubMonitor(tempOperant)
-            } //replace operant
+            } //replace operant at sub monitor
 
-
-            if (numberTwo != undefined && numberOne != undefined) {
-                addToSubMonitor(numberTwo)
-                switch (tempOperant) {
-                    case '+':
-                        numberOne = add(numberOne, numberTwo)
-                        updateMonitor(`result:${numberOne}`)
-                        break;
-                    case '-':
-                        numberOne = substract(numberOne, numberTwo)
-                        updateMonitor(`result:${numberOne}`)
-                        break;
-                    case '*':
-                        numberOne = multipl(numberOne, numberTwo)
-                        updateMonitor(`result:${numberOne}`)
-                        break;
-                    case '/':
-                        numberOne = divide(numberOne, numberTwo)
-                        updateMonitor(`result:${numberOne}`)
-                        break;
-
-
-                }
-
-                // if (tempOperant != '=') { addToSubMonitor(numberTwo) }
+            if (tempOperant === '%') {
+                numberOne = percent(numberOne)
+                updateMonitor(`result:${numberOne}%`)
             }
-
-
-
-
-
-
-            // if (tempOperant === '%') {
-            //     numberOne = percent(numberOne)
-            //     addToSubMonitor(numberOne)
-
-            // }
 
             if (tempNumber == '' && numberOne == 0) {
                 return
             }
+
             console.log(numberOne);
             console.log(numberTwo);
-
-
-
         })
     })
 }
 
+function getFunction(operant) {
+    switch (operant) {
+        case '+':
+            numberOne = add(numberOne, numberTwo)
+            break;
+        case '-':
+            numberOne = substract(numberOne, numberTwo)
+            break;
+        case '*':
+            numberOne = multipl(numberOne, numberTwo)
+            break;
+        case '/':
+            numberOne = divide(numberOne, numberTwo)
+            break
+    }
+    updateMonitor(`result:${numberOne}`)
+}
 
 function clearCalculator() {
     clearBtn.addEventListener('click', () => {
         if (tempNumber !== '') {
-            tempNumber = tempNumber.substring(0, tempNumber.length - 1)
+            let tempString = tempNumber.toString()
+            tempNumber = tempString.substring(0, tempString.length - 1)
             updateMonitor(tempNumber)
             deactiveteDotButton()
             if (tempNumber == '') { clearBtn.textContent = 'AC' }
             return tempNumber
-
         } else {
             updateMonitor('')
             monitorExpression.textContent = ''
             clearBtn.textContent = 'C'
             numberOne = undefined
             numberTwo = undefined
+            tempNumber = ''
+            tempOperant = ''
         }
     })
 }
 
-
-// function clearCalculator() {
-//     clearBtn.addEventListener('click', () => {
-//         if (monitor.textContent !== '') {
-//             monitor.textContent = monitor.textContent.substring(0, monitor.textContent.length - 1)
-//                 // updateMonitor(tempNumber)
-//             deactiveteDotButton()
-//             if (monitor.textContent == '') { clearBtn.textContent = 'AC' }
-
-
-//         } else {
-//             updateMonitor('')
-//             monitorExpression.textContent = ''
-//             clearBtn.textContent = 'C'
-//             numberOne = undefined
-//             numberTwo = undefined
-//         }
-//     })
-// }
-
 function simulateClickBypressKey(e) {
-    if (document.querySelector(`button[data-key="${e.key}"]`)) { document.querySelector(`button[data-key="${e.key}"]`).click(); }
-
+    const key = document.querySelector(`button[data-key="${e.key}"]`)
+    if (!key) { return }
+    key.click();
+    key.classList.add('active')
+    setTimeout(() => key.classList.remove('active'), 150)
 }
+
+btnChangeOperant.addEventListener('click', () => {
+    // console.log(monitorExpression.textContent);
+    if (monitor.textContent.includes('result:')) {
+        numberOne *= (-1)
+        updateMonitor(`result:${numberOne}`)
+        return
+    }
+    if (tempNumber == '') { tempNumber = '-' } else { tempNumber === '-' ? tempNumber = '' : tempNumber *= (-1) }
+    updateMonitor(tempNumber)
+})
+
 window.addEventListener('keydown', simulateClickBypressKey)
 
 getNumber()
