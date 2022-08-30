@@ -200,6 +200,7 @@ btnChangeOperant.addEventListener('click', () => {
     if (monitor.textContent.includes('result:')) {
         numberOne *= (-1)
         updateMonitor(`result:${numberOne}`)
+        numberTwo = undefined
         return
     }
     if (tempNumber == '') { tempNumber = '-' } else { tempNumber === '-' ? tempNumber = '' : tempNumber *= (-1) }
