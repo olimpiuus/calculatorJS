@@ -192,7 +192,7 @@ function simulateClickBypressKey(e) {
     if (!key) { return }
     key.click();
     key.classList.add('active')
-    setTimeout(() => key.classList.remove('active'), 150)
+    setTimeout(() => key.classList.remove('active'), 10000)
 }
 
 btnChangeOperant.addEventListener('click', () => {
@@ -200,6 +200,7 @@ btnChangeOperant.addEventListener('click', () => {
     if (monitor.textContent.includes('result:')) {
         numberOne *= (-1)
         updateMonitor(`result:${numberOne}`)
+        numberTwo = undefined
         return
     }
     if (tempNumber == '') { tempNumber = '-' } else { tempNumber === '-' ? tempNumber = '' : tempNumber *= (-1) }
