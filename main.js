@@ -192,7 +192,7 @@ function simulateClickBypressKey(e) {
     if (!key) { return }
     key.click();
     key.classList.add('active')
-    setTimeout(() => key.classList.remove('active'), 150)
+    setTimeout(() => key.classList.remove('active'), 10000)
 }
 
 btnChangeOperant.addEventListener('click', () => {
