@@ -57,6 +57,7 @@ button {
     font-size: 24px;
     font-weight: bold;
     color: white;
+    flex-wrap: nowrap;
 }
 
 .monitor-sub {
@@ -66,6 +67,7 @@ button {
 
 .monitor-main {
     height: 30px;
+    margin-top: 10px;
 }
 
 .deactiveted {}
